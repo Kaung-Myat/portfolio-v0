@@ -2,7 +2,7 @@ import { getGitHubRepos } from '@/lib/github';
 import { GitHubContributionGraph } from '@/components/github-contribution-graph';
 import { GitHubRepos } from '@/components/github-repos';
 
-const GITHUB_USERNAME = 'yourusername';
+const GITHUB_USERNAME = 'Kaung-Myat';
 
 export const revalidate = 3600;
 
