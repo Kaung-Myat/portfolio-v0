@@ -1,0 +1,151 @@
+---
+title: "TypeScript Best Practices for Modern Web Development"
+date: "2024-03-05"
+description: "Essential TypeScript patterns and practices to write safer, more maintainable code in your web applications."
+author: "Kaung Mrat Thu"
+tags: ["typescript", "javascript", "best-practices", "web-development"]
+---
+
+# TypeScript Best Practices for Modern Web Development
+
+TypeScript has become the de facto standard for building large-scale JavaScript applications. Here are some best practices I've learned through years of using TypeScript in production.
+
+## 1. Use Strict Mode
+
+Always enable strict mode in your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true
+  }
+}
+```
+
+## 2. Prefer Type Inference
+
+Let TypeScript infer types when possible:
+
+```typescript
+const user = {
+  name: "Kaung Mrat Thu",
+  age: 25,
+  isActive: true,
+};
+```
+
+Instead of:
+
+```typescript
+const user: { name: string; age: number; isActive: boolean } = {
+  name: "Kaung Mrat Thu",
+  age: 25,
+  isActive: true,
+};
+```
+
+## 3. Use Union Types and Type Guards
+
+Union types make your code more flexible:
+
+```typescript
+type Result<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
+
+function handleResult<T>(result: Result<T>) {
+  if (result.success) {
+    console.log(result.data);
+  } else {
+    console.error(result.error);
+  }
+}
+```
+
+## 4. Leverage Utility Types
+
+TypeScript provides powerful utility types:
+
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+}
+
+type PublicUser = Omit<User, 'password'>;
+
+type PartialUser = Partial<User>;
+
+type ReadonlyUser = Readonly<User>;
+```
+
+## 5. Create Reusable Generic Types
+
+Generics make your code more reusable:
+
+```typescript
+interface ApiResponse<T> {
+  data: T;
+  status: number;
+  message: string;
+}
+
+async function fetchData<T>(url: string): Promise<ApiResponse<T>> {
+  const response = await fetch(url);
+  return response.json();
+}
+```
+
+## 6. Use Discriminated Unions
+
+Discriminated unions help with complex state management:
+
+```typescript
+type LoadingState = { status: 'loading' };
+type SuccessState<T> = { status: 'success'; data: T };
+type ErrorState = { status: 'error'; error: string };
+
+type AsyncState<T> = LoadingState | SuccessState<T> | ErrorState;
+
+function render<T>(state: AsyncState<T>) {
+  switch (state.status) {
+    case 'loading':
+      return 'Loading...';
+    case 'success':
+      return state.data;
+    case 'error':
+      return `Error: ${state.error}`;
+  }
+}
+```
+
+## 7. Avoid the `any` Type
+
+Using `any` defeats the purpose of TypeScript. Use `unknown` instead:
+
+```typescript
+function processValue(value: unknown) {
+  if (typeof value === 'string') {
+    return value.toUpperCase();
+  }
+  if (typeof value === 'number') {
+    return value * 2;
+  }
+  throw new Error('Unsupported type');
+}
+```
+
+## Conclusion
+
+These practices will help you write more robust, maintainable TypeScript code. The key is to leverage TypeScript's type system to catch errors early and make your code self-documenting.
+
+What are your favorite TypeScript patterns? Let me know in the comments!
